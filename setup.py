@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="canvas-tools",
-    version="0.0.1",
+    version="0.0.2.1",
     author="Alan Chen",
     author_email="me@zenan.ch",
     description="A set of tools for working with Canvas.",
@@ -17,6 +17,7 @@ setuptools.setup(
     entry_points={
         'console_scripts': [
             'canvas_group_csv=canvas_tools.canvas_group_csv:main',
+            'canvas_download_annotated_pdf=canvas_tools.download_annotated_pdf:main',
         ],
     },
     classifiers=[
