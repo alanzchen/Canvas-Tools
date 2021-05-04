@@ -5,6 +5,7 @@ A set of tools for working with Canvas.
 
 - `canvas_group_csv`: Export your canvas student groups into a CSV file. Ready for Zoom breakout room CSV import.
 - `canvas_download_annotated_pdf`: Download all annotated PDFs from a specific assignment. PDF files only.
+- `canvas_download_quiz_questions`: Export a CSV file from a quiz with questions and answers.
 
 ## Install
 
