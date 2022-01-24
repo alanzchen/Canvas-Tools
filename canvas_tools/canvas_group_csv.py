@@ -1,44 +1,22 @@
 #!/usr/bin/env python3
-import requests
-
-def get_groups(domain, course_id, token):
-    try:
-        response = requests.get(
-            url="https://{}/api/v1/courses/{}/groups".format(domain, course_id),
-            headers={
-                "Authorization": "Bearer {}".format(token)
-            },
-        )
-        grps = response.json()
-        return {i['id']: i['name'] for i in grps}
-    except requests.exceptions.RequestException:
-        print('HTTP Request failed')
-
-def get_group_people(domain, grp, token):
-    try:
-        response = requests.get(
-            url="https://{}/api/v1/groups/{}/users".format(domain, grp),
-            headers={
-                "Authorization": "Bearer {}".format(token)
-                },
-        )
-        return response.json()
-    except requests.exceptions.RequestException:
-        print('HTTP Request failed')
+from canvasapi import Canvas
 
 def write_csv(domain, course_id, token, filename=None):
+    canvas = Canvas('https://' + domain, token)
+    course = canvas.get_course(course_id)
+    paginated_groups = course.get_groups()
+    grps = list(paginated_groups)
+    cnt = 0
     if not filename:
         filename = '{}.csv'.format(course_id)
-    grps = get_groups(domain, course_id, token)
-    cnt = 0
     with open(filename, 'w') as f:
         f.write('Pre-assign Room Name,Email Address\n')
-        for i, name in grps.items():
-            grp = get_group_people(domain, i, token)
-            for j in grp:
-                f.write(name + ',' + j['login_id'] + '\n')
+        for grp in grps:
+            ppl = list(grp.get_users())
+            for j in ppl:
+                f.write(grp.name + ',' + j.login_id + '\n')
                 cnt += 1
-        print('Successfully exported {} groups with {} students in total. CSV written to {}'.format(str(len(grps)), str(cnt), filename))
+    print('Successfully exported {} groups with {} students in total. CSV written to {}'.format(str(len(grps)), str(cnt), filename))
 
 def main():
     import argparse
